@@ -83,3 +83,14 @@ CREATE INDEX "idx_documents_doc_date" ON "documents" (`doc_date`);
 CREATE INDEX "idx_view_entries_entry_id" ON "view_entries" (`entry_id`);
 CREATE INDEX "idx_document_entries_entry_id" ON "document_entries" (`entry_id`);
 CREATE INDEX "idx_account_entries_account_entries_ibfk_1" ON "account_entries" (`entry_id`);
+
+CREATE TRIGGER AFTER INSERT ON entries
+BEGIN
+	INSERT INTO view_entries
+	SELECT DISTINCT view_id, entry_id, null, entry_amount * (100-COALESCE(rule_vat, view_vat))/100 as amount, entry_amount * COALESCE(rule_vat, view_vat)/100 as vat
+	FROM entries
+	INNER JOIN view_rules
+	ON (entry_text LIKE CONCAT('%', rule_pattern, '%'))
+	NATURAL JOIN views
+	WHERE entry_id = NEW.entry_id;
+END;

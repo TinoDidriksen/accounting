@@ -16,7 +16,7 @@ if (!empty($_REQUEST['update'])) {
 
 $accounts = array();
 $total = 0;
-$query = "SELECT * FROM accounts WHERE acc_id != 4 ORDER BY acc_id ASC";
+$query = "SELECT * FROM accounts ORDER BY acc_id ASC";
 $stm = $GLOBALS['sql']->query($query);
 while ($row = $stm->fetch()) {
 	$accounts[$row['acc_id']] = $row;

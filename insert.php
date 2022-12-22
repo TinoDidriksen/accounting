@@ -154,7 +154,7 @@ if (!empty($_REQUEST['acc']) && !empty($accounts[$_REQUEST['acc']])) {
 			));
 	}
 
-	$GLOBALS['sql']->query('CALL update_account_balances();');
+	$GLOBALS['sql']->query('UPDATE accounts as acc NATURAL JOIN (SELECT acc_id, SUM(entry_amount) + acc_initial as new_balance FROM accounts NATURAL JOIN account_entries NATURAL JOIN entries GROUP BY acc_id) as calc SET acc.acc_balance = calc.new_balance');
 	$GLOBALS['sql']->commit();
 }
 
