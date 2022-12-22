@@ -1,0 +1,46 @@
+Order Deny,Allow
+Deny from all
+Allow from 147.78.30.
+Allow from 147.78.31.
+Allow from 130.226.
+Allow from 130.225.
+Allow from 83.89.249.
+Allow from 185.229.152.
+Allow from 87.52.110.
+Allow from 87.52.109.
+
+php_flag register_globals off
+php_flag register_argc_argv off
+
+php_value memory_limit "48M"
+php_value post_max_size "32M"
+php_value upload_max_filesize "32M"
+php_value request_order "GP"
+php_value magic_quotes_gpc 0
+php_value magic_quotes_runtime 0
+php_value magic_quotes_sybase 0
+php_value max_execution_time 60
+php_value apc.cache_by_default 1
+php_value display_errors 1
+php_value display_startup_errors 1
+php_value error_reporting -1
+
+php_value session.name "tdacc"
+php_value session.cookie_path "/"
+php_value session.cookie_lifetime 2592000
+php_value session.gc_maxlifetime 2592000
+php_value session.gc_divisor 10000
+php_value session.auto_start 0
+php_value session.hash_function 1
+php_value session.hash_bits_per_character 6
+php_value session.use_trans_sid 0
+php_value session.use_cookies 1
+php_value session.use_only_cookies 1
+
+php_value default_charset "UTF-8"
+php_value mbstring.internal_encoding "UTF-8"
+php_value mbstring.http_output "UTF-8"
+php_value mbstring.http_input "auto"
+php_value mbstring.detect_order "auto"
+php_value mbstring.encoding_translation 1
+php_value mbstring.func_overload 0

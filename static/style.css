@@ -1,0 +1,39 @@
+table {
+	border-collapse: collapse;
+}
+tr:nth-child(even) {
+	background-color: #eee;
+}
+tr:nth-child(odd) {
+	background-color: #fff;
+}
+th, td {
+	text-align: left;
+	padding: 3px 6px;
+	border-bottom: 1px solid #888;
+	border-right: 1px solid #ccc;
+}
+th {
+	background-color: #ddf;
+}
+.center {
+	text-align: center;
+}
+.right {
+	text-align: right;
+}
+.negative {
+	color: red;
+}
+.italic {
+	font-style: italic;
+}
+.bold {
+	font-weight: bold;
+}
+.smaller {
+	font-size: smaller;
+}
+.lighter {
+	color: #888;
+}
