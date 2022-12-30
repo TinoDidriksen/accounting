@@ -90,7 +90,7 @@ BEGIN
 	SELECT DISTINCT view_id, entry_id, null, entry_amount * (100-COALESCE(rule_vat, view_vat))/100 as amount, entry_amount * COALESCE(rule_vat, view_vat)/100 as vat
 	FROM entries
 	INNER JOIN view_rules
-	ON (entry_text LIKE CONCAT('%', rule_pattern, '%'))
+	ON (entry_text LIKE ('%' || rule_pattern || '%'))
 	NATURAL JOIN views
 	WHERE entry_id = NEW.entry_id;
 END;
