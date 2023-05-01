@@ -28,3 +28,13 @@ while ($_REQUEST['a'] === 'remove_from_business') {
 	$GLOBALS['sql']->commit();
 	break;
 }
+
+while ($_REQUEST['a'] === 'entry_class_change') {
+	$id = intval($_REQUEST['id']);
+	$val = intval($_REQUEST['val']);
+
+	$GLOBALS['sql']->beginTransaction();
+	$GLOBALS['sql']->prepexec("UPDATE entries SET entry_class = ? WHERE entry_id = ?", [$val, $id]);
+	$GLOBALS['sql']->commit();
+	break;
+}

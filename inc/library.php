@@ -13,6 +13,13 @@ function num_format($num) {
 	return $num;
 }
 
+function num_format_null($num, $null='&nbsp;') {
+	if (empty($num)) {
+		return $null;
+	}
+	return num_format($num);
+}
+
 function msc_convert_num($amount) {
 	if (preg_match('@\( ([^)]+)\)@u', $amount, $m)) {
 		$amount = $m[1];

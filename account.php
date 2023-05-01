@@ -3,18 +3,30 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Tino Didriksen's Accounting Tools</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="static/style.css" type="text/css" rel="stylesheet">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2/dist/js/bootstrap.min.js"></script>
 	<script src="static/script.js"></script>
 </head>
-<body>
+<body class="container-fluid">
 <?php
 require_once __DIR__.'/inc/library.php';
 
+echo '<datalist id="eclass">'."\n";
+$rows = $GLOBALS['sql']->prepexec("SELECT * FROM entry_classes ORDER BY c_id")->fetchAll();
+foreach ($rows as $row) {
+	echo '<option value="'.$row['c_id'].'">'.$row['c_id'].' '.htmlspecialchars($row['c_name']).'</option>'."\n";
+}
+foreach ($rows as $row) {
+	echo '<option value="'.$row['c_id'].'">'.htmlspecialchars($row['c_name']).' ('.$row['c_id'].')</option>'."\n";
+}
+echo '</datalist>'."\n";
 
 $entries = array();
 $totals = array();
-$query = "SELECT * FROM account_entries NATURAL JOIN entries WHERE acc_id = :acc_id ORDER BY entry_date DESC, entry_id DESC";
+$query = "SELECT * FROM account_entries NATURAL JOIN entries WHERE entry_date >= date('now', 'start of year', '-3 year') AND acc_id = :acc_id ORDER BY entry_date DESC, entry_id DESC";
 $stm = $GLOBALS['sql']->prepare($query);
 $stm->execute(array(
 	':acc_id' => $_REQUEST['id']
@@ -77,6 +89,7 @@ foreach ($entries as $m => $month) {
 		<th class="right">Amount</th>
 		<th class="right">Balance</th>
 		<th class="right">Action</th>
+		<th class="right">Class</th>
 	</tr>
 	</thead>
 	<tfoot>
@@ -84,6 +97,7 @@ foreach ($entries as $m => $month) {
 		<th></th>
 		<th>Movement</th>
 		<th class="right">{$total}</th>
+		<th></th>
 		<th></th>
 		<th></th>
 	</tr>
@@ -99,6 +113,9 @@ XOUT;
 				$entry['entry_text'] .= '<br><a href="document.php?hash='.$doc['doc_hash'].'" class="italic">'.htmlspecialchars($doc['doc_name']).'</a> (<a href="download.php?hash='.$doc['doc_hash'].'" class="smaller italic">download</a>)';
 			}
 		}
+		if (empty($entry['entry_class'])) {
+			$entry['entry_class'] = '';
+		}
 		echo <<<XOUT
 	<tr title="{$entry['entry_id']}">
 		<td>{$entry['entry_date']}</td>
@@ -106,6 +123,7 @@ XOUT;
 		<td class="right">{$entry['entry_amount']}</td>
 		<td class="right">{$entry['entry_balance']}</td>
 		<td class="right"><a href="#" onclick="addToBusiness(this, true); return false;">With</a>, <a href="#" onclick="addToBusiness(this, false); return false;">w/o</a></td>
+		<td class="right"><input value="{$entry['entry_class']}" list="eclass" class="eclass"></td>
 	</tr>
 XOUT;
 	}

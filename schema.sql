@@ -55,7 +55,13 @@ CREATE TABLE `entries` (
 ,  `entry_amount` decimal(20,5) NOT NULL
 ,  `entry_balance` decimal(20,5) NOT NULL
 ,  `entry_date_interest` date NOT NULL
+,  `entry_class` integer NOT NULL DEFAULT 0
 ,  UNIQUE (`entry_date`,`entry_amount`,`entry_balance`)
+);
+CREATE TABLE `entry_classes` (
+	`c_id` INTEGER NOT NULL
+,	`c_name` TEXT NOT NULL
+,	PRIMARY KEY(c_id)
 );
 CREATE TABLE `view_entries` (
   `view_id` integer  NOT NULL
@@ -94,3 +100,45 @@ BEGIN
 	NATURAL JOIN views
 	WHERE entry_id = NEW.entry_id;
 END;
+
+BEGIN;
+DELETE FROM entry_classes;
+INSERT INTO entry_classes (c_id,c_name) VALUES
+(0, "(null)"),
+(1000, "Indkomst"),
+(1050, "A-indkomst"),
+(1100, "B-indkomst (CVR 32104312)"),
+(1150, "Ferietillæg"),
+(1200, "Børne- og ungeydelse"),
+(1250, "Fælles husstand"),
+(2000, "Bolig"),
+(2050, "Husleje / termin"),
+(2100, "El"),
+(2150, "Vand/Varme"),
+(3000, "Cykler (Babboe eCurve)"),
+(4000, "Forsikring"),
+(4050, "Familie-/indboforsikring"),
+(4100, "Livsforsikring"),
+(4150, "Sygesikringen Danmark"),
+(5000, "Hverdag"),
+(5050, "Dagligvarer"),
+(5100, "Restaurantbesøg / takeaway"),
+(5150, "Læge, tandlæge, medicin"),
+(5200, "Briller, kontaktlinser"),
+(5250, "Personlig pleje (kosmetik, frisør, etc.)"),
+(5300, "TV / streaming"),
+(5350, "Mobiltelefon"),
+-- (5400, "Internet"),
+(5450, "Fritidsinteresser"),
+(5500, "Transport"),
+(5550, "Bøger"),
+(5600, "Tøj / sko"),
+(5650, "Boligudstyr"),
+(5700, "Kæledyr (foder, pleje, etc.)"),
+(5750, "Diverse (gaver, legetøg, etc.)"),
+(6000, "Ferie"),
+(6050, "Årskort / entré"),
+(7000, "Andet"),
+-- (7050, "Fagforening / A-kasse")
+;
+COMMIT;

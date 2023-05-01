@@ -3,9 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Tino Didriksen's Accounting Tools</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="static/style.css" type="text/css" rel="stylesheet">
 </head>
-<body>
+<body class="container-fluid">
 <?php
 require_once __DIR__.'/inc/library.php';
 
