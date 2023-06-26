@@ -30,9 +30,29 @@ if (!empty($_REQUEST['acc']) && !empty($accounts[$_REQUEST['acc']])) {
 	$data = explode("\n", $data);
 	$lines = array();
 	foreach ($data as $line) {
+		// Nordea MasterCard copy-paste
+		// DD.MM.YYYY \t Item \t Amount
+		if (preg_match('@^(\d{2})\.(\d{2})\.(\d{4})\t([^\t]+)\t([^\t]+)$@', $line, $m)) {
+			$date = "{$m[3]}-{$m[2]}-{$m[1]}";
+			$desc = $m[4];
+			$amount = $m[5];
+			$amount = str_replace('.', '', $amount);
+			$amount = str_replace(',', '.', $amount);
+
+			$desc = preg_replace('@\s+@u', ' ', $desc);
+			$desc = preg_replace('@\s+@u', ' ', $desc);
+			$desc = preg_replace('@[ \t,]$@u', '', $desc);
+			$lines[] = array(
+				'date' => $date,
+				'desc' => $desc,
+				'idate' => $date,
+				'amount' => $amount,
+				'balance' => 0,
+				);
+		}
 		// Nordea CSV export, new July 2022 format
 		// Bogføringsdato;Beløb;Afsender;Modtager;Navn;Beskrivelse;Saldo;Valuta;Afstemt
-		if (preg_match('@^(\d+)/(\d+)/(\d+);@', $line)) {
+		else if (preg_match('@^(\d+)/(\d+)/(\d+);@', $line)) {
 			$line = preg_replace('@(\d+)/(\d+)/(\d+);@u', '$1-$2-$3;', $line);
 			list($date,$amount,$_sender,$_receiver,$_name,$desc,$balance,$_currency,$_settled) = explode(';', $line);
 			$amount = str_replace(',', '.', $amount);
@@ -124,6 +144,11 @@ if (!empty($_REQUEST['acc']) && !empty($accounts[$_REQUEST['acc']])) {
 	for ($i=1, $e=count($lines) ; $i < $e ; $i++) {
 		if (floatval($lines[$i]['balance']) + floatval($lines[$i-1]['amount']) == floatval($lines[$i-1]['balance'])) {
 			$reverse = true;
+			break;
+		}
+		if (strtotime($lines[$i]['date']) < strtotime($lines[$i-1]['date'])) {
+			$reverse = true;
+			break;
 		}
 	}
 	if ($reverse) {
